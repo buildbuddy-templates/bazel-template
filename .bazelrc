@@ -1,0 +1,36 @@
+### Recommended flags ###
+
+# Tells Bazel to use an environment with a static value for PATH and does not inherit LD_LIBRARY_PATH. 
+# Use --action_env=ENV_VARIABLE if you want to inherit specific environment variables from the client, 
+# but note that doing so can prevent cross-user caching if a shared cache is used.
+common --incompatible_strict_action_env
+
+# Tells Bazel to pick up host-OS-specific config lines from bazelrc files.
+# For example, if the host OS is Linux and you run bazel build, Bazel picks up lines starting with build:linux. 
+# Supported OS identifiers are linux, macos, windows, freebsd, and openbsd. 
+# Enabling this flag is equivalent to using --config=linux on Linux, --config=windows on Windows, etc.
+common --enable_platform_specific_config=true
+
+# Ensures tags (like no-remote) will be propagated from a target to the actions' execution requirements.
+common --incompatible_allow_tags_propagation
+
+# Write a heap dump to <output_base>/<invocation_id>.heapdump.hprof if Bazel OOMs.
+common --heap_dump_on_oom
+
+### Performance optimizations ###
+
+# Merges the analysis phase and execution phase.
+common --experimental_merged_skyframe_analysis_execution
+
+# Makes remote cache I/O happen in the background.
+common --experimental_remote_cache_async
+
+# Reduces the size of the build events by removing legacy output format.
+common --nolegacy_important_outputs
+
+### User-specific flags ###
+
+# Try importing a user specific user.bazelrc
+# You can create your own by copying and editing the template-user.bazelrc template:
+# cp template-user.bazelrc user.bazelrc
+try-import %workspace%/user.bazelrc
